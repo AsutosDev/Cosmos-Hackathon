@@ -135,7 +135,7 @@ export default function Navbar() {
                   onClick={() => setIsSettingsOpen(!isSettingsOpen)}
                   className={cn("w-10 h-10 flex items-center justify-center transition-all cursor-pointer", iconButtonClasses)}
                 >
-                  <Settings size={20} className={isDark ? 'text-white' : 'text-primary'} />
+                  <Settings size={20} className="text-white" />
                 </button>
                 
                 {isSettingsOpen && (
@@ -194,7 +194,7 @@ export default function Navbar() {
                 className={cn("w-10 h-10 flex items-center justify-center transition-all cursor-pointer", iconButtonClasses)}
                 title="Dashboard"
               >
-                <LayoutDashboard size={20} className={isDark ? 'text-white' : 'text-primary'} />
+                <LayoutDashboard size={20} className="text-white" />
               </Link>
 
               {/* Notifications */}
@@ -206,7 +206,7 @@ export default function Navbar() {
                   aria-label="Notifications"
                   title="Notifications"
                 >
-                  <Bell size={20} className={isDark ? 'text-white' : 'text-primary'} />
+                    <Bell size={20} className="text-white" />
                   <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
                 </button>
 

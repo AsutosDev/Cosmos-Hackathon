@@ -28,7 +28,7 @@ export default function RenterAuth() {
     try {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
-        router.push('/');
+        router.push('/owner');
       } else {
         const cred = await createUserWithEmailAndPassword(auth, email, password);
         await updateProfile(cred.user, { displayName: `${firstName} ${lastName}` });
@@ -40,7 +40,7 @@ export default function RenterAuth() {
           rating: 0,
           totalReviews: 0,
         });
-        router.push('/');
+        router.push('/owner');
       }
     } catch (err: any) {
       alert(err.message);

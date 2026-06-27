@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../Downloads/htdocs/loginpage"
+		},
+		{
+			"path": "../../Downloads/htdocs/landingpage"
+		},
+		{
+			"path": "../../Downloads/htdocs/mainpage"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "Cosmos-Hackathon"
+	}
+}

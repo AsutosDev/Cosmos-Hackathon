@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { 
   ArrowRight, 
   Clock, 
@@ -188,22 +189,7 @@ export default function Home() {
   return (
     <div className="flex flex-col gap-16">
 
-      {/* Category Nav */}
-      <section className="flex justify-center gap-3 flex-wrap">
-        {categories.map((cat, i) => (
-          <motion.a
-            key={cat.name}
-            href={cat.href}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.05 }}
-            className="flex flex-col items-center justify-center gap-2 w-[100px] h-[90px] bg-white border border-border hover:border-primary hover:bg-primary-light transition-all group"
-          >
-            <cat.icon className="w-6 h-6 group-hover:scale-110 transition-transform text-primary" />
-            <span className="text-[0.8rem] font-bold">{cat.name}</span>
-          </motion.a>
-        ))}
-      </section>
+      {/* Top category tiles removed as requested */}
 
       {/* Hero */}
       <section className="border-t border-border pt-12 flex items-end justify-between">
@@ -251,6 +237,13 @@ export default function Home() {
               animate={{ opacity: 1 }}
               transition={{ delay: i * 0.05 }}
               className="bg-white group cursor-pointer hover:bg-primary-light transition-colors"
+              onClick={() => {
+                if (item.name === 'DJI Drone') {
+                  router.push('/kyc');
+                } else {
+                  router.push(`/items/${item.id}/book`);
+                }
+              }}
             >
               {/* Photo */}
               <div className="overflow-hidden border-b border-border h-[220px]">
@@ -294,31 +287,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="border-t border-border pt-16">
-        <p className="text-xs font-bold text-text-muted uppercase tracking-[3px] mb-4">Why Bhada Maa</p>
-        <h2 className="text-[2.5rem] font-black tracking-tighter text-black mb-10">Key Features</h2>
-        <div className="grid grid-cols-4 border border-border">
-          {features.map((f, i) => (
-            <motion.div
-              key={f.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className={cn(
-                "p-8 bg-white hover:bg-primary-light transition-colors",
-                i < 3 ? "border-r border-border" : ""
-              )}
-            >
-              <div className="w-[44px] h-[44px] bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mb-4">
-                <f.icon size={20} />
-              </div>
-              <h3 className="text-[1rem] font-bold leading-relaxed">{f.title}</h3>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+      {/* Features section removed as requested */}
 
     </div>
   );

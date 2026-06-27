@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, query, orderBy, where } from 'firebase/firestore';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import { Search, MapPin, Filter, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { clsx, type ClassValue } from 'clsx';
@@ -23,6 +24,8 @@ export default function ItemsPage() {
   useEffect(() => {
     fetchItems();
   }, []);
+
+  const router = useRouter();
 
   const fetchItems = async () => {
     setLoading(true);
@@ -114,6 +117,14 @@ export default function ItemsPage() {
               transition={{ delay: i * 0.05 }}
               whileHover={{ y: -8 }}
               className="bg-surface rounded-[32px] p-6 border border-border flex flex-col gap-4 group cursor-pointer hover:border-primary transition-all shadow-sm hover:shadow-xl"
+              onClick={() => {
+                // If this is the DJI Drone, require KYC first
+                if (item.name === 'DJI Drone') {
+                  router.push('/kyc');
+                } else {
+                  router.push(`/items/${item.id}/book`);
+                }
+              }}
             >
               <div className="h-[180px] bg-element-bg rounded-2xl overflow-hidden flex items-center justify-center p-4">
                 <img 

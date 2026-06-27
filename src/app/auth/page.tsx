@@ -17,7 +17,10 @@ export default function AuthLanding() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-14 text-center"
       >
-        <h1 className="text-5xl font-black tracking-tighter text-black mb-3">
+        <p className="text-text-muted text-lg max-w-2xl mx-auto mb-6 leading-relaxed">
+          Bhada Maa connects local owners and borrowers: owners list items with prices and availability, while borrowers browse, request and pay per use. KYC verification and reviews help keep transactions secure and reliable.
+        </p>
+        <h1 className="text-4xl font-black tracking-tighter text-black mb-4 max-w-3xl mx-auto leading-tight">
           How do you want<br />to continue?
         </h1>
         <p className="text-text-muted text-base max-w-sm mx-auto">
