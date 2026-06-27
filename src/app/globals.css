@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Outfit';
+  src: url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+}
+
+:root {
+  /* Pleasant Sunflower Yellow Theme */
+  --primary: #f59e0b; /* Warmer, deeper yellow/amber that works better with white text */
+  --primary-hover: #d97706;
+  --primary-light: #fef3c7; 
+  --secondary: #ffffff;
+  --accent: #fbbf24;
+  
+  --bg: #ffffff;
+  --surface: #fffbeb; /* Soft Cream Surface */
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(245, 158, 11, 0.1);
+  
+  --text-main: #451a03; /* Deep warm brown/black for readability */
+  --text-muted: #92400e;
+  --text-invert: #ffffff;
+  
+  --border: #fef3c7;
+  --glow: 0 0 30px rgba(245, 158, 11, 0.15);
+  --element-bg: #fff7ed;
+}
+
+@theme {
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-light: var(--primary-light);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-text-main: var(--text-main);
+  --color-text-muted: var(--text-muted);
+  --color-text-invert: var(--text-invert);
+  --color-border: var(--border);
+  --color-element-bg: var(--element-bg);
+  --color-glass-bg: var(--glass-bg);
+  --color-glass-border: var(--glass-border);
+
+  --font-outfit: 'Outfit', sans-serif;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-bg text-text-main font-outfit min-h-screen relative overflow-x-hidden transition-colors duration-300;
+  }
+
+  body::before {
+    content: '';
+    @apply fixed top-[-20%] left-[-10%] w-[600px] h-[600px] opacity-10 pointer-events-none -z-1;
+    background: radial-gradient(circle, var(--primary-light) 0%, transparent 60%);
+    filter: blur(100px);
+  }
+}
+
+@layer utilities {
+  .tagline {
+    @apply block text-[0.8rem] font-bold text-text-muted tracking-[2px] uppercase mb-2;
+  }
+
+  .section-title {
+    @apply text-[3.5rem] font-black leading-tight mb-4 tracking-tighter text-primary;
+  }
+  
+  .glass-card {
+    @apply bg-white border border-border shadow-xl shadow-amber-500/5;
+  }
+}
