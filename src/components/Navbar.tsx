@@ -33,7 +33,24 @@ export default function Navbar() {
   const [theme, setTheme] = useState('dark');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
   const router = useRouter();
+  const noUser = !user;
+
+  const notifications: Array<{
+    id: number;
+    title: string;
+    message: string;
+    time: string;
+    unread: boolean;
+  }> = [];
+  const isDark = theme === 'dark';
+  const iconButtonClasses = isDark
+    ? 'bg-[#111827] border-[#374151] text-white hover:bg-[#1f2937]'
+    : 'bg-primary border border-primary text-white hover:bg-primary-hover';
+  const panelClasses = isDark
+    ? 'bg-[#111827] border-[#374151] text-white'
+    : 'bg-white border border-border text-text-main';
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (u) => {
@@ -44,7 +61,19 @@ export default function Navbar() {
     setTheme(savedTheme);
     document.body.setAttribute('data-theme', savedTheme);
 
-    return () => unsubscribe();
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('[data-notification-root]')) {
+        setIsNotifOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      unsubscribe();
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   const toggleTheme = () => {
@@ -56,11 +85,13 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     await signOut(auth);
+    setIsLogoutConfirmOpen(false);
     router.push('/auth');
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full h-[80px] bg-primary z-[1000] text-white shadow-lg">
+    <>
+    <nav className={cn("fixed top-0 left-0 w-full h-[80px] z-[1000] shadow-lg", isDark ? 'bg-[#0f172a] text-white' : 'bg-primary text-white')}>
       <div className="max-w-[1200px] h-full mx-auto px-8 flex items-center justify-between gap-10">
         <Link href="/" className="flex items-center relative z-10">
           <span className="text-3xl font-extrabold tracking-tighter text-white drop-shadow-sm">Bhada Maa</span>
@@ -85,90 +116,176 @@ export default function Navbar() {
 
         {/* Right side Actions */}
         <div className="flex items-center gap-[15px]">
-          {/* Settings */}
-          <div className="relative">
-            <button 
-              onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-              className="w-10 h-10 bg-white border border-white/40 flex items-center justify-center hover:bg-white/90 transition-all"
-            >
-              <Settings size={20} className="text-primary" />
-            </button>
-            
-            {isSettingsOpen && (
-              <div className="absolute top-[60px] right-0 w-[260px] bg-white border border-border shadow-lg overflow-hidden z-50 text-text-main">
-                <div className="p-4 border-b border-border">
-                  <h3 className="font-bold text-sm uppercase tracking-wider">Settings</h3>
-                </div>
-                
-                <div className="p-3 flex flex-col">
-                  <div className="flex items-center justify-between p-2 hover:bg-element-bg">
-                    <div className="flex items-center gap-3">
-                      {theme === 'dark' ? <Moon size={16} /> : <Sun size={16} />}
-                      <span className="text-[0.9rem]">Dark Mode</span>
-                    </div>
-                    <button 
-                      onClick={toggleTheme}
-                      className={cn(
-                        "w-10 h-5 transition-colors relative border border-border",
-                        theme === 'dark' ? "bg-primary" : "bg-gray-200"
-                      )}
-                    >
-                      <div className={cn(
-                        "absolute top-0.5 w-4 h-4 bg-white border border-border transition-all",
-                        theme === 'dark' ? "left-5" : "left-0.5"
-                      )} />
-                    </button>
-                  </div>
-
-                  <div className="flex flex-col">
-                    <Link href="/profile" className="flex items-center gap-3 p-3 hover:bg-element-bg text-[0.9rem] transition-colors border-t border-border">
-                      <User size={16} /> Account
-                    </Link>
-                    <Link href="/kyc" className="flex items-center gap-3 p-3 hover:bg-element-bg text-[0.9rem] transition-colors border-t border-border">
-                      <CreditCard size={16} /> KYC
-                    </Link>
-                    <Link href="/how-it-works" className="flex items-center gap-3 p-3 hover:bg-element-bg text-[0.9rem] transition-colors border-t border-border">
-                      <HelpCircle size={16} /> Help
-                    </Link>
-                    <button 
-                      onClick={handleLogout}
-                      className="flex items-center gap-3 p-3 hover:bg-red-50 text-red-500 text-[0.9rem] transition-colors text-left border-t border-border"
-                    >
-                      <LogOut size={16} /> Log Out
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <Link 
-            href="/history" 
-            className="w-10 h-10 bg-white border border-white/40 flex items-center justify-center hover:bg-white/90 transition-all"
-            title="Dashboard"
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className={cn("w-10 h-10 flex items-center justify-center transition-all cursor-pointer", iconButtonClasses)}
+            aria-label="Toggle theme"
+            title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
           >
-            <LayoutDashboard size={20} className="text-primary" />
-          </Link>
-
-          {/* Notifications */}
-          <div className="relative">
-            <button 
-              onClick={() => setIsNotifOpen(!isNotifOpen)}
-              className="w-10 h-10 bg-white border border-white/40 flex items-center justify-center hover:bg-white/90 transition-all relative"
-            >
-              <Bell size={20} className="text-primary" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500" />
-            </button>
-          </div>
-
-          <button 
-            onClick={() => router.push('/profile')}
-            className="w-10 h-10 bg-white border border-white/40 flex items-center justify-center hover:bg-white/90 transition-all"
-          >
-            <User size={20} className="text-primary" />
+            {isDark ? <Sun size={20} className="text-white" /> : <Moon size={20} className="text-white" />}
           </button>
+
+          {!noUser && (
+            <>
+              {/* Settings */}
+              <div className="relative">
+                <button 
+                  type="button"
+                  onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+                  className={cn("w-10 h-10 flex items-center justify-center transition-all cursor-pointer", iconButtonClasses)}
+                >
+                  <Settings size={20} className={isDark ? 'text-white' : 'text-primary'} />
+                </button>
+                
+                {isSettingsOpen && (
+                  <div className={cn("absolute top-[60px] right-0 w-[260px] shadow-lg overflow-hidden z-50", panelClasses)}>
+                    <div className={cn("p-4 border-b", isDark ? 'border-[#374151]' : 'border-border')}>
+                      <h3 className="font-bold text-sm uppercase tracking-wider">Settings</h3>
+                    </div>
+                    
+                    <div className="p-3 flex flex-col">
+                      <div className="flex items-center justify-between p-2 hover:bg-element-bg">
+                        <div className="flex items-center gap-3">
+                          {theme === 'dark' ? <Moon size={16} /> : <Sun size={16} />}
+                          <span className="text-[0.9rem]">Dark Mode</span>
+                        </div>
+                        <button 
+                          onClick={toggleTheme}
+                          className={cn(
+                            "w-10 h-5 transition-colors relative border border-border",
+                            theme === 'dark' ? "bg-primary" : "bg-gray-200"
+                          )}
+                        >
+                          <div className={cn(
+                            "absolute top-0.5 w-4 h-4 bg-white border border-border transition-all",
+                            theme === 'dark' ? "left-5" : "left-0.5"
+                          )} />
+                        </button>
+                      </div>
+
+                      <div className="flex flex-col">
+                        <Link href="/profile" className={cn("flex items-center gap-3 p-3 text-[0.9rem] transition-colors border-t", isDark ? 'hover:bg-[#1f2937] border-[#374151]' : 'hover:bg-element-bg border-border')}>
+                          <User size={16} /> Account
+                        </Link>
+                        <Link href="/kyc" className={cn("flex items-center gap-3 p-3 text-[0.9rem] transition-colors border-t", isDark ? 'hover:bg-[#1f2937] border-[#374151]' : 'hover:bg-element-bg border-border')}>
+                          <CreditCard size={16} /> KYC
+                        </Link>
+                        <Link href="/how-it-works" className={cn("flex items-center gap-3 p-3 text-[0.9rem] transition-colors border-t", isDark ? 'hover:bg-[#1f2937] border-[#374151]' : 'hover:bg-element-bg border-border')}>
+                          <HelpCircle size={16} /> Help
+                        </Link>
+                        <button 
+                          onClick={() => {
+                            setIsSettingsOpen(false);
+                            setIsLogoutConfirmOpen(true);
+                          }}
+                          className={cn("flex items-center gap-3 p-3 text-[0.9rem] transition-colors text-left border-t cursor-pointer", isDark ? 'hover:bg-red-950/40 text-red-400 border-[#374151]' : 'hover:bg-red-50 text-red-500 border-border')}
+                        >
+                          <LogOut size={16} /> Log Out
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <Link 
+                href="/history" 
+                className={cn("w-10 h-10 flex items-center justify-center transition-all cursor-pointer", iconButtonClasses)}
+                title="Dashboard"
+              >
+                <LayoutDashboard size={20} className={isDark ? 'text-white' : 'text-primary'} />
+              </Link>
+
+              {/* Notifications */}
+              <div className="relative" data-notification-root>
+                <button 
+                  type="button"
+                  onClick={() => setIsNotifOpen(!isNotifOpen)}
+                  className={cn("w-10 h-10 flex items-center justify-center transition-all relative cursor-pointer", iconButtonClasses)}
+                  aria-label="Notifications"
+                  title="Notifications"
+                >
+                  <Bell size={20} className={isDark ? 'text-white' : 'text-primary'} />
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
+                </button>
+
+                {isNotifOpen && (
+                  <div className={cn("absolute top-[60px] right-0 w-[290px] shadow-lg z-50", panelClasses)}>
+                    <div className={cn("p-4 border-b", isDark ? 'border-[#374151]' : 'border-border')}>
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-bold text-sm uppercase tracking-wider">Notifications</h3>
+                        <span className={cn("text-xs", isDark ? 'text-slate-400' : 'text-text-muted')}>Live updates</span>
+                      </div>
+                    </div>
+
+                    <div className="max-h-[280px] overflow-y-auto">
+                      {notifications.length === 0 ? (
+                        <div className={cn("p-4 text-sm", isDark ? 'text-slate-400' : 'text-text-muted')}>
+                          No new notifications from other users yet.
+                        </div>
+                      ) : (
+                        notifications.map((item) => (
+                          <button
+                            key={item.id}
+                            type="button"
+                            className={cn("w-full text-left p-3 border-b last:border-b-0 transition-colors cursor-pointer", isDark ? 'border-[#374151] hover:bg-[#1f2937]' : 'border-border hover:bg-element-bg')}
+                          >
+                            <div className="flex items-start justify-between gap-2">
+                              <div>
+                                <p className="text-sm font-semibold">{item.title}</p>
+                                <p className={cn("text-xs mt-1", isDark ? 'text-slate-400' : 'text-text-muted')}>{item.message}</p>
+                              </div>
+                              {item.unread && <span className="mt-1 h-2.5 w-2.5 rounded-full bg-primary flex-shrink-0" />}
+                            </div>
+                            <p className={cn("text-[11px] mt-2", isDark ? 'text-slate-500' : 'text-text-muted')}>{item.time}</p>
+                          </button>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <button 
+                type="button"
+                onClick={() => router.push('/profile')}
+                className={cn("w-10 h-10 flex items-center justify-center transition-all cursor-pointer", iconButtonClasses)}
+              >
+                <User size={20} className={isDark ? 'text-white' : 'text-primary'} />
+              </button>
+            </>
+          )}
         </div>
       </div>
     </nav>
+
+    {isLogoutConfirmOpen && (
+      <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/60 px-4" onClick={() => setIsLogoutConfirmOpen(false)}>
+        <div className={cn("w-full max-w-[360px] rounded-lg border p-5 shadow-2xl", panelClasses)} onClick={(e) => e.stopPropagation()}>
+          <h3 className="text-lg font-semibold">Log out of your account?</h3>
+          <p className={cn("mt-2 text-sm", isDark ? 'text-slate-400' : 'text-text-muted')}>
+            Are you sure you want to log out? You can always sign back in anytime.
+          </p>
+          <div className="mt-5 flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => setIsLogoutConfirmOpen(false)}
+              className={cn("px-3 py-2 text-sm transition-colors cursor-pointer", isDark ? 'bg-[#1f2937] hover:bg-[#374151]' : 'bg-gray-100 hover:bg-gray-200')}
+            >
+              Stay signed in
+            </button>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="px-3 py-2 bg-red-500 text-white text-sm transition-colors hover:bg-red-600 cursor-pointer"
+            >
+              Log out
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+    </>
   );
 }

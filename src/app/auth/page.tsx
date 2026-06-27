@@ -17,10 +17,6 @@ export default function AuthLanding() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-14 text-center"
       >
-        <div className="inline-flex items-center gap-2 bg-primary px-5 py-2 mb-6">
-          <Star size={14} className="text-white fill-white" />
-          <span className="text-white text-xs font-bold uppercase tracking-widest">Bhada Maa</span>
-        </div>
         <h1 className="text-5xl font-black tracking-tighter text-black mb-3">
           How do you want<br />to continue?
         </h1>

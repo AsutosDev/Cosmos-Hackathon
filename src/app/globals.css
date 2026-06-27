@@ -7,7 +7,6 @@
   --secondary: #ffffff;
   --accent: #fbbf24;
 
-  /* Plain white background, light black borders */
   --bg: #ffffff;
   --surface: #ffffff;
   --glass-bg: #ffffff;
@@ -17,7 +16,103 @@
   --text-muted: #555555;
   --text-invert: #ffffff;
 
-  --border: #d0d0d0; /* light black — visible but soft */
+  --border: #d0d0d0;
+  --glow: none;
+  --element-bg: #f8f8f8;
+}
+
+body[data-theme='dark'] {
+  --primary: #f59e0b;
+  --primary-hover: #fbbf24;
+  --primary-light: #451a03;
+  --secondary: #0f172a;
+  --accent: #fbbf24;
+
+  --bg: #020617;
+  --surface: #0f172a;
+  --glass-bg: #111827;
+  --glass-border: #334155;
+
+  --text-main: #f8fafc;
+  --text-muted: #cbd5e1;
+  --text-invert: #020617;
+
+  --border: #334155;
+  --glow: rgba(245, 158, 11, 0.25);
+  --element-bg: #1e293b;
+
+  background-color: var(--bg) !important;
+  color: var(--text-main) !important;
+}
+
+body[data-theme='dark'] .bg-white,
+body[data-theme='dark'] .bg-surface,
+body[data-theme='dark'] .bg-bg,
+body[data-theme='dark'] .bg-gray-50,
+body[data-theme='dark'] .bg-gray-100,
+body[data-theme='dark'] .bg-gray-200,
+body[data-theme='dark'] .bg-gray-300 {
+  background-color: var(--surface) !important;
+}
+
+body[data-theme='dark'] .text-black,
+body[data-theme='dark'] .text-gray-900,
+body[data-theme='dark'] .text-gray-800,
+body[data-theme='dark'] .text-gray-700,
+body[data-theme='dark'] .text-gray-600 {
+  color: var(--text-main) !important;
+}
+
+body[data-theme='dark'] .text-gray-500,
+body[data-theme='dark'] .text-gray-400,
+body[data-theme='dark'] .text-gray-300,
+body[data-theme='dark'] .text-gray-200,
+body[data-theme='dark'] .text-text-muted {
+  color: var(--text-muted) !important;
+}
+
+body[data-theme='dark'] .border-black,
+body[data-theme='dark'] .border-gray-200,
+body[data-theme='dark'] .border-gray-300,
+body[data-theme='dark'] .border-gray-400,
+body[data-theme='dark'] .border-gray-500,
+body[data-theme='dark'] .border-border {
+  border-color: var(--border) !important;
+}
+
+body[data-theme='dark'] input,
+body[data-theme='dark'] textarea,
+body[data-theme='dark'] select {
+  background-color: var(--surface) !important;
+  color: var(--text-main) !important;
+  border-color: var(--border) !important;
+}
+
+body[data-theme='dark'] .shadow-sm,
+body[data-theme='dark'] .shadow-md,
+body[data-theme='dark'] .shadow-lg,
+body[data-theme='dark'] .shadow-xl,
+body[data-theme='dark'] .shadow-2xl {
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.05), 0 12px 30px rgba(2, 6, 23, 0.45) !important;
+}
+
+body[data-theme='light'] {
+  --primary: #f59e0b;
+  --primary-hover: #d97706;
+  --primary-light: #fef3c7;
+  --secondary: #ffffff;
+  --accent: #fbbf24;
+
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --glass-bg: #ffffff;
+  --glass-border: #e0e0e0;
+
+  --text-main: #111111;
+  --text-muted: #555555;
+  --text-invert: #ffffff;
+
+  --border: #d0d0d0;
   --glow: none;
   --element-bg: #f8f8f8;
 }
