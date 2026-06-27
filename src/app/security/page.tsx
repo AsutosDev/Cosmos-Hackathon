@@ -67,18 +67,6 @@ export default function SecurityPage() {
           </motion.div>
         ))}
       </section>
-
-      <section className="p-12 bg-red-500/5 border border-red-500/20 rounded-[40px] flex flex-col md:flex-row items-center gap-10">
-        <div className="w-16 h-16 bg-red-500/10 text-red-500 rounded-2xl flex items-center justify-center shrink-0">
-          <AlertTriangle size={32} />
-        </div>
-        <div>
-          <h2 className="text-2xl font-bold mb-2">Notice to Users</h2>
-          <p className="text-text-muted">
-            Bhada Maa is a prototype platform. Please do not share any sensitive personal information or financial data. We are continuously improving our security protocols to protect our community members.
-          </p>
-        </div>
-      </section>
     </div>
   );
 }

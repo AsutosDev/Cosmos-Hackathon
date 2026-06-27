@@ -1,230 +1,122 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
-import { 
-  auth, 
-  db 
-} from '@/lib/firebase';
-import { 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword,
-  updateProfile 
-} from 'firebase/auth';
-import { 
-  doc, 
-  setDoc 
-} from 'firebase/firestore';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  HelpCircle, 
-  Shield, 
-  Mail, 
-  Lock, 
-  User, 
-  Phone, 
-  MapPin, 
-  ArrowRight,
-  Sparkles
-} from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Package, ShoppingBag, ArrowRight, Star, Shield, Zap } from 'lucide-react';
 import Link from 'next/link';
 
-export default function AuthPage() {
-  const [isLogin, setIsLogin] = useState(true);
-  const [loading, setLoading] = useState(false);
+export default function AuthLanding() {
   const router = useRouter();
 
-  // Form states
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [mobile, setMobile] = useState('');
-  const [permAddress, setPermAddress] = useState('');
-
-  const handleAuth = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      if (isLogin) {
-        await signInWithEmailAndPassword(auth, email, password);
-        router.push('/');
-      } else {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-
-        await updateProfile(user, {
-          displayName: `${firstName} ${lastName}`
-        });
-
-        await setDoc(doc(db, "users", user.uid), {
-          firstName,
-          lastName,
-          mobile,
-          permAddress,
-          email,
-          createdAt: new Date().toISOString(),
-          kycStatus: 'pending'
-        });
-
-        router.push('/');
-      }
-    } catch (error: any) {
-      alert(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <div className="min-h-[90vh] flex items-center justify-center p-4">
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="max-w-[1100px] w-full bg-white rounded-[48px] overflow-hidden flex flex-col lg:flex-row shadow-[0_32px_64px_-16px_rgba(250,204,21,0.15)] border border-primary/10"
+    <div className="min-h-[90vh] flex flex-col items-center justify-center p-6 bg-white">
+      {/* Brand */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-14 text-center"
       >
-        {/* Visual Side */}
-        <div className="lg:flex-1 bg-primary-light p-12 flex flex-col justify-between relative overflow-hidden min-h-[300px]">
-          <div className="z-10">
-            <Link href="/" className="mb-12 block">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center shadow-lg border border-white/40">
-                <Sparkles className="text-white" size={24} />
-              </div>
-              <span className="text-3xl font-black tracking-tighter text-text-main">Bhada Maa</span>
-            </div>
-            </Link>
-            
-            <h2 className="text-5xl font-black text-text-main mb-8 leading-tight tracking-tighter">
-              {isLogin ? "Welcome back to your happy place." : "A warmer way to share stuff."}
-            </h2>
-            <p className="text-text-muted text-xl max-w-[400px] leading-relaxed">
-              {isLogin 
-                ? "Sign in to see what's new in your neighborhood today." 
-                : "Join our community and start borrowing things you need, from people you trust."}
-            </p>
-          </div>
-
-          <div className="z-10 flex flex-col gap-4 mt-12">
-            <div className="flex p-4 bg-white/60 backdrop-blur-md rounded-3xl border border-white/40 shadow-sm gap-4">
-              <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white shrink-0">
-                <Shield size={24} />
-              </div>
-              <div>
-                <h4 className="font-bold text-text-main">Safe & Secure</h4>
-                <p className="text-sm text-text-muted">KYC verified community</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Abstract Decorations */}
-          <div className="absolute top-[-10%] right-[-10%] w-[400px] h-[400px] bg-primary/20 rounded-full blur-[100px]" />
-          <div className="absolute bottom-[-20%] left-[-20%] w-[350px] h-[350px] bg-white rounded-full blur-[80px]" />
+        <div className="inline-flex items-center gap-2 bg-primary px-5 py-2 mb-6">
+          <Star size={14} className="text-white fill-white" />
+          <span className="text-white text-xs font-bold uppercase tracking-widest">Bhada Maa</span>
         </div>
+        <h1 className="text-5xl font-black tracking-tighter text-black mb-3">
+          How do you want<br />to continue?
+        </h1>
+        <p className="text-text-muted text-base max-w-sm mx-auto">
+          Choose your role to get started — you can always switch later.
+        </p>
+      </motion.div>
 
-        {/* Content Side */}
-        <div className="lg:flex-[1.2] p-12 lg:p-20 bg-white relative">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={isLogin ? 'login' : 'signup'}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-              className="max-w-[450px] mx-auto"
-            >
-              <div className="mb-10">
-                <h3 className="text-3xl font-black text-text-main mb-3 tracking-tight">
-                  {isLogin ? "Sign In" : "Get Started"}
-                </h3>
-                <p className="text-text-muted text-lg">
-                  {isLogin ? "Good to see you again!" : "Create your account in seconds."}
-                </p>
-              </div>
+      {/* Role Cards */}
+      <div className="grid grid-cols-2 gap-px border border-border bg-border w-full max-w-[820px]">
+        {/* Renter / Owner Card */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.1 }}
+          onClick={() => router.push('/auth/renter')}
+          className="bg-white p-10 cursor-pointer group hover:bg-primary transition-colors duration-200"
+        >
+          <div className="w-14 h-14 border border-border group-hover:border-white/30 flex items-center justify-center mb-8 group-hover:bg-white/20 transition-colors">
+            <Package size={28} className="text-primary group-hover:text-white" />
+          </div>
 
-              <form onSubmit={handleAuth} className="flex flex-col gap-5">
-                {!isLogin && (
-                  <div className="flex gap-4">
-                    <div className="flex-1">
-                      <label className="block text-sm font-bold text-text-muted mb-2 ml-1">First Name</label>
-                      <input 
-                        required
-                        type="text" 
-                        placeholder="John" 
-                        className="w-full bg-[#fcfcfc] border border-border rounded-2xl py-4 px-6 outline-none focus:border-primary focus:bg-white transition-all text-text-main"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <label className="block text-sm font-bold text-text-muted mb-2 ml-1">Last Name</label>
-                      <input 
-                        required
-                        type="text" 
-                        placeholder="Doe" 
-                        className="w-full bg-[#fcfcfc] border border-border rounded-2xl py-4 px-6 outline-none focus:border-primary focus:bg-white transition-all text-text-main"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                )}
+          <p className="text-xs font-bold text-text-muted group-hover:text-white/70 uppercase tracking-widest mb-2 transition-colors">For Owners</p>
+          <h2 className="text-3xl font-black text-black group-hover:text-white tracking-tight mb-4 transition-colors">
+            I want to<br />list items
+          </h2>
+          <p className="text-text-muted group-hover:text-white/80 text-sm leading-relaxed mb-8 transition-colors">
+            List your tools, vehicles, gear, or equipment and earn money when you're not using them.
+          </p>
 
-                <div>
-                  <label className="block text-sm font-bold text-text-muted mb-2 ml-1">Email Address</label>
-                  <div className="relative">
-                    <Mail size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-text-muted" />
-                    <input 
-                      required
-                      type="email" 
-                      placeholder="name@email.com" 
-                      className="w-full bg-[#fcfcfc] border border-border rounded-2xl py-4 pl-14 pr-6 outline-none focus:border-primary focus:bg-white transition-all text-text-main"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </div>
-                </div>
+          <ul className="flex flex-col gap-2 mb-10">
+            {['Set your own price', 'Manage bookings easily', 'KYC verified renters only'].map(f => (
+              <li key={f} className="flex items-center gap-2 text-sm text-text-muted group-hover:text-white/80 transition-colors">
+                <span className="w-1.5 h-1.5 bg-primary group-hover:bg-white" />
+                {f}
+              </li>
+            ))}
+          </ul>
 
-                <div>
-                  <label className="block text-sm font-bold text-text-muted mb-2 ml-1">Password</label>
-                  <div className="relative">
-                    <Lock size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-text-muted" />
-                    <input 
-                      required
-                      type="password" 
-                      placeholder="••••••••" 
-                      className="w-full bg-[#fcfcfc] border border-border rounded-2xl py-4 pl-14 pr-6 outline-none focus:border-primary focus:bg-white transition-all text-text-main"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                  </div>
-                </div>
+          <div className="flex items-center gap-2 font-bold text-black group-hover:text-white transition-colors">
+            Continue as Owner <ArrowRight size={16} />
+          </div>
+        </motion.div>
 
-                <button 
-                  type="submit" 
-                  disabled={loading}
-                  className="w-full bg-primary text-white h-[64px] rounded-2xl font-black text-lg hover:bg-primary-hover shadow-[0_12px_24px_-8px_rgba(245,158,11,0.3)] transition-all flex items-center justify-center gap-3 disabled:opacity-50 mt-4 outline-none"
-                >
-                  {loading ? "Please wait..." : (isLogin ? "Sign In" : "Join the Community")}
-                  {!loading && <ArrowRight size={20} />}
-                </button>
+        {/* Consumer / Borrower Card */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.15 }}
+          onClick={() => router.push('/auth/consumer')}
+          className="bg-white p-10 cursor-pointer group hover:bg-black transition-colors duration-200"
+        >
+          <div className="w-14 h-14 border border-border group-hover:border-white/20 flex items-center justify-center mb-8 group-hover:bg-white/10 transition-colors">
+            <ShoppingBag size={28} className="text-primary group-hover:text-white" />
+          </div>
 
-                <div className="text-center mt-8">
-                  <p className="text-text-muted font-medium">
-                    {isLogin ? "New here?" : "Already have an account?"} 
-                    <button 
-                      type="button"
-                      onClick={() => setIsLogin(!isLogin)}
-                      className="text-primary-hover font-black ml-2 hover:underline"
-                    >
-                      {isLogin ? "Create account" : "Log in"}
-                    </button>
-                  </p>
-                </div>
-              </form>
-            </motion.div>
-          </AnimatePresence>
+          <p className="text-xs font-bold text-text-muted group-hover:text-white/60 uppercase tracking-widest mb-2 transition-colors">For Borrowers</p>
+          <h2 className="text-3xl font-black text-black group-hover:text-white tracking-tight mb-4 transition-colors">
+            I want to<br />rent items
+          </h2>
+          <p className="text-text-muted group-hover:text-white/70 text-sm leading-relaxed mb-8 transition-colors">
+            Find and rent items in your neighbourhood — from cameras to cars, for any budget.
+          </p>
+
+          <ul className="flex flex-col gap-2 mb-10">
+            {['Browse 100+ categories', 'Pay only for what you need', 'Rate & review owners'].map(f => (
+              <li key={f} className="flex items-center gap-2 text-sm text-text-muted group-hover:text-white/70 transition-colors">
+                <span className="w-1.5 h-1.5 bg-primary group-hover:bg-white" />
+                {f}
+              </li>
+            ))}
+          </ul>
+
+          <div className="flex items-center gap-2 font-bold text-black group-hover:text-white transition-colors">
+            Continue as Borrower <ArrowRight size={16} />
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Trust badges */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+        className="flex items-center gap-8 mt-10 text-text-muted text-xs"
+      >
+        <div className="flex items-center gap-2">
+          <Shield size={14} /> KYC Verified
+        </div>
+        <div className="w-px h-4 bg-border" />
+        <div className="flex items-center gap-2">
+          <Zap size={14} /> Instant Booking
+        </div>
+        <div className="w-px h-4 bg-border" />
+        <div className="flex items-center gap-2">
+          <Star size={14} /> Rated 4.9/5
         </div>
       </motion.div>
     </div>

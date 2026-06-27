@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FloatingActionButton from "@/components/FloatingActionButton";
 
-const outfit = Outfit({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-outfit",
+  variable: "--font-inter",
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -21,10 +22,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${outfit.variable} antialiased`}>
-      <body className="font-outfit">
+    <html lang="en" className={`${inter.variable} antialiased`}>
+      <body className="font-inter">
         <div className="page-background">
-          <main className="max-w-[1600px] w-full mx-auto px-[60px] py-10">
+          <main className="max-w-[1600px] w-full mx-auto px-[60px] pt-[100px] pb-10">
             <Navbar />
             <div className="flex-1">
               {children}

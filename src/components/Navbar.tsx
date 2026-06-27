@@ -89,52 +89,52 @@ export default function Navbar() {
           <div className="relative">
             <button 
               onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-              className="w-10 h-10 bg-white/20 border border-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-all hover:-translate-y-0.5 shadow-sm"
+              className="w-10 h-10 bg-white border border-white/40 flex items-center justify-center hover:bg-white/90 transition-all"
             >
-              <Settings size={20} className="text-white" />
+              <Settings size={20} className="text-primary" />
             </button>
             
             {isSettingsOpen && (
-              <div className="absolute top-[60px] right-0 w-[280px] bg-white border border-border rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 text-text-main">
-                <div className="p-4 border-b border-border bg-surface/50">
-                  <h3 className="font-bold">Settings</h3>
+              <div className="absolute top-[60px] right-0 w-[260px] bg-white border border-border shadow-lg overflow-hidden z-50 text-text-main">
+                <div className="p-4 border-b border-border">
+                  <h3 className="font-bold text-sm uppercase tracking-wider">Settings</h3>
                 </div>
                 
-                <div className="p-4 flex flex-col gap-4">
-                  <div className="flex items-center justify-between">
+                <div className="p-3 flex flex-col">
+                  <div className="flex items-center justify-between p-2 hover:bg-element-bg">
                     <div className="flex items-center gap-3">
-                      {theme === 'dark' ? <Moon size={18} /> : <Sun size={18} />}
+                      {theme === 'dark' ? <Moon size={16} /> : <Sun size={16} />}
                       <span className="text-[0.9rem]">Dark Mode</span>
                     </div>
                     <button 
                       onClick={toggleTheme}
                       className={cn(
-                        "w-12 h-6 rounded-full transition-colors relative",
-                        theme === 'dark' ? "bg-primary" : "bg-gray-300"
+                        "w-10 h-5 transition-colors relative border border-border",
+                        theme === 'dark' ? "bg-primary" : "bg-gray-200"
                       )}
                     >
                       <div className={cn(
-                        "absolute top-1 w-4 h-4 rounded-full bg-white transition-all",
-                        theme === 'dark' ? "left-7" : "left-1"
+                        "absolute top-0.5 w-4 h-4 bg-white border border-border transition-all",
+                        theme === 'dark' ? "left-5" : "left-0.5"
                       )} />
                     </button>
                   </div>
 
-                  <div className="flex flex-col gap-2">
-                    <Link href="/profile" className="flex items-center gap-3 p-2 rounded-lg hover:bg-element-bg text-[0.9rem] transition-colors">
-                      <User size={18} /> Account
+                  <div className="flex flex-col">
+                    <Link href="/profile" className="flex items-center gap-3 p-3 hover:bg-element-bg text-[0.9rem] transition-colors border-t border-border">
+                      <User size={16} /> Account
                     </Link>
-                    <Link href="/kyc" className="flex items-center gap-3 p-2 rounded-lg hover:bg-element-bg text-[0.9rem] transition-colors">
-                      <CreditCard size={18} /> KYC
+                    <Link href="/kyc" className="flex items-center gap-3 p-3 hover:bg-element-bg text-[0.9rem] transition-colors border-t border-border">
+                      <CreditCard size={16} /> KYC
                     </Link>
-                    <Link href="/how-it-works" className="flex items-center gap-3 p-2 rounded-lg hover:bg-element-bg text-[0.9rem] transition-colors">
-                      <HelpCircle size={18} /> Help
+                    <Link href="/how-it-works" className="flex items-center gap-3 p-3 hover:bg-element-bg text-[0.9rem] transition-colors border-t border-border">
+                      <HelpCircle size={16} /> Help
                     </Link>
                     <button 
                       onClick={handleLogout}
-                      className="flex items-center gap-3 p-2 rounded-lg hover:bg-red-500/10 text-red-500 text-[0.9rem] transition-colors text-left"
+                      className="flex items-center gap-3 p-3 hover:bg-red-50 text-red-500 text-[0.9rem] transition-colors text-left border-t border-border"
                     >
-                      <LogOut size={18} /> Log Out
+                      <LogOut size={16} /> Log Out
                     </button>
                   </div>
                 </div>
@@ -144,28 +144,28 @@ export default function Navbar() {
 
           <Link 
             href="/history" 
-            className="w-10 h-10 bg-white/20 border border-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-all hover:-translate-y-0.5 shadow-sm"
+            className="w-10 h-10 bg-white border border-white/40 flex items-center justify-center hover:bg-white/90 transition-all"
             title="Dashboard"
           >
-            <LayoutDashboard size={20} className="text-white" />
+            <LayoutDashboard size={20} className="text-primary" />
           </Link>
 
           {/* Notifications */}
           <div className="relative">
             <button 
               onClick={() => setIsNotifOpen(!isNotifOpen)}
-              className="w-10 h-10 bg-white/20 border border-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-all hover:-translate-y-0.5 relative shadow-sm"
+              className="w-10 h-10 bg-white border border-white/40 flex items-center justify-center hover:bg-white/90 transition-all relative"
             >
-              <Bell size={20} className="text-white" />
-              <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 border-2 border-primary rounded-full" />
+              <Bell size={20} className="text-primary" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500" />
             </button>
           </div>
 
           <button 
             onClick={() => router.push('/profile')}
-            className="w-10 h-10 bg-white/20 border border-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-all hover:-translate-y-0.5 shadow-sm"
+            className="w-10 h-10 bg-white border border-white/40 flex items-center justify-center hover:bg-white/90 transition-all"
           >
-            <User size={20} className="text-white" />
+            <User size={20} className="text-primary" />
           </button>
         </div>
       </div>
