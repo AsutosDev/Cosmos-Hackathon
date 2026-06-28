@@ -19,6 +19,7 @@ import {
   Briefcase,
   Star
 } from 'lucide-react';
+import { rentalItems as sampleRentalItems } from '@/data/sampleItems';
 import { motion } from 'framer-motion';
 import { auth } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -50,107 +51,7 @@ const features = [
 ];
 
 // Real Unsplash photo IDs for common rental items
-const rentalItems = [
-  {
-    id: 1,
-    name: 'Canon DSLR Camera',
-    category: 'Camera',
-    price: 800,
-    rating: 4.9,
-    reviews: 34,
-    owner: 'Raj S.',
-    // Unsplash: DSLR camera on table
-    photo: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600&q=80&fit=crop',
-  },
-  {
-    id: 2,
-    name: 'Mountain Tent (4-Person)',
-    category: 'Camping',
-    price: 400,
-    rating: 4.7,
-    reviews: 21,
-    owner: 'Sita P.',
-    // Unsplash: orange camping tent in nature
-    photo: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=600&q=80&fit=crop',
-  },
-  {
-    id: 3,
-    name: 'Acoustic Guitar',
-    category: 'Music',
-    price: 300,
-    rating: 4.8,
-    reviews: 18,
-    owner: 'Hari B.',
-    // Unsplash: acoustic guitar
-    photo: 'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=600&q=80&fit=crop',
-  },
-  {
-    id: 4,
-    name: 'MacBook Pro 14"',
-    category: 'Electronics',
-    price: 1200,
-    rating: 5.0,
-    reviews: 41,
-    owner: 'Priya K.',
-    // Unsplash: MacBook on clean desk
-    photo: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&q=80&fit=crop',
-  },
-  {
-    id: 5,
-    name: 'Cordless Power Drill',
-    category: 'Tools',
-    price: 200,
-    rating: 4.6,
-    reviews: 29,
-    owner: 'Mohan T.',
-    // Unsplash: power drill
-    photo: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=600&q=80&fit=crop',
-  },
-  {
-    id: 6,
-    name: 'City Bicycle',
-    category: 'Vehicles',
-    price: 250,
-    rating: 4.5,
-    reviews: 55,
-    owner: 'Anita M.',
-    // Unsplash: bicycle leaning against wall
-    photo: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=600&q=80&fit=crop',
-  },
-  {
-    id: 7,
-    name: 'DJI Drone',
-    category: 'Camera',
-    price: 1500,
-    rating: 4.9,
-    reviews: 17,
-    owner: 'Bikash R.',
-    // Unsplash: drone in hand outdoors
-    photo: 'https://images.unsplash.com/photo-1473968512647-3e447244af8f?w=600&q=80&fit=crop',
-  },
-  {
-    id: 8,
-    name: 'Trekking Backpack 60L',
-    category: 'Camping',
-    price: 350,
-    rating: 4.7,
-    reviews: 38,
-    owner: 'Devi L.',
-    // Unsplash: hiking backpack outdoors
-    photo: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&q=80&fit=crop',
-  },
-  {
-    id: 9,
-    name: 'Toyota SUV',
-    category: 'Cars',
-    price: 3500,
-    rating: 4.8,
-    reviews: 12,
-    owner: 'Suresh G.',
-    // Unsplash: clean SUV on road
-    photo: 'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=600&q=80&fit=crop',
-  },
-];
+const rentalItems = sampleRentalItems;
 
 const filterChips = ['All', 'Camera', 'Camping', 'Music', 'Electronics', 'Tools', 'Vehicles', 'Cars'];
 
@@ -237,18 +138,12 @@ export default function Home() {
               animate={{ opacity: 1 }}
               transition={{ delay: i * 0.05 }}
               className="bg-white group cursor-pointer hover:bg-primary-light transition-colors"
-              onClick={() => {
-                if (item.name === 'DJI Drone') {
-                  router.push('/kyc');
-                } else {
-                  router.push(`/items/${item.id}/book`);
-                }
-              }}
+              onClick={() => router.push(`/items/${item.id}/order`)}
             >
               {/* Photo */}
               <div className="overflow-hidden border-b border-border h-[220px]">
                 <img
-                  src={item.photo}
+                  src={item.imageUrl}
                   alt={item.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
@@ -267,13 +162,18 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between mt-3 pt-3 border-t border-border">
+                <div className="mt-3 text-sm text-text-muted">
+                  <p>Owner: <span className="font-bold text-black">{item.owner || item.ownerName}</span></p>
+                  <p>{item.successfulRents ?? Math.max(8, Number(item.reviews || 0) * 4)} successful rentals</p>
+                </div>
+
+                <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
                   <div className="flex items-center gap-1.5">
                     <Star size={12} className="text-primary fill-primary" />
                     <span className="text-sm font-bold">{item.rating}</span>
                     <span className="text-xs text-text-muted">({item.reviews} reviews)</span>
                   </div>
-                  <span className="text-xs text-text-muted">by {item.owner}</span>
+                  <span className="text-xs text-text-muted">by {item.owner || item.ownerName}</span>
                 </div>
               </div>
             </motion.div>

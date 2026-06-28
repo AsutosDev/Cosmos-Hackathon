@@ -142,13 +142,28 @@ export default function OwnerDashboard() {
     setTimeout(() => setSuccessMsg(''), 3000);
   };
 
+  const requireKycVerification = () => {
+    if (!currentUser) {
+      router.push('/auth');
+      return false;
+    }
+
+    if (kycStatus !== 'verified') {
+      alert('Please complete KYC verification before listing items.');
+      router.push('/kyc');
+      return false;
+    }
+
+    return true;
+  };
+
   const handleDeleteDraft = (id: string) => {
     const updated = drafts.filter((draft) => draft.id !== id);
     saveDrafts(updated);
   };
 
   const handlePublishDraft = async (draft: any) => {
-    if (!currentUser) return router.push('/auth');
+    if (!requireKycVerification()) return;
     setDraftLoading(true);
     try {
       await addDoc(collection(db, 'items'), {
@@ -174,7 +189,7 @@ export default function OwnerDashboard() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!currentUser) return;
+    if (!requireKycVerification()) return;
     setFormLoading(true);
     try {
       await addDoc(collection(db, 'items'), {
@@ -278,10 +293,17 @@ export default function OwnerDashboard() {
           {!showForm ? (
             <motion.button
               whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
-              onClick={() => setShowForm(true)}
+              onClick={() => {
+                if (kycStatus !== 'verified') {
+                  alert('Please complete KYC verification before listing items.');
+                  router.push('/kyc');
+                  return;
+                }
+                setShowForm(true);
+              }}
               className="w-full border-2 border-dashed border-border py-6 flex items-center justify-center gap-3 text-text-muted font-bold text-sm hover:border-primary hover:text-primary transition-colors"
             >
-              <Plus size={18} /> Add New Listing
+              <Plus size={18} /> {kycStatus === 'verified' ? 'Add New Listing' : 'Complete KYC to Add Listing'}
             </motion.button>
           ) : (
             <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}
@@ -333,6 +355,11 @@ export default function OwnerDashboard() {
                     Save Draft Locally
                   </button>
                 </div>
+                {kycStatus !== 'verified' && (
+                  <div className="rounded-2xl border border-yellow-300 bg-yellow-50 px-4 py-3 text-sm text-yellow-800">
+                    You must complete KYC verification before publishing a listing. <button type="button" onClick={() => router.push('/kyc')} className="font-bold underline">Verify now</button>.
+                  </div>
+                )}
               </form>
             </motion.div>
           )}

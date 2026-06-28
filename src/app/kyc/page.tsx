@@ -40,7 +40,7 @@ export default function KYCPage() {
     await new Promise((r) => setTimeout(r, 1400));
     setLoading(false);
     setSubmitted(true);
-    setTimeout(() => router.push('/history'), 1200);
+    setTimeout(() => router.push('/items'), 1200);
   };
 
   if (submitted) {
@@ -60,7 +60,7 @@ export default function KYCPage() {
       <div className="max-w-[900px] mx-auto bg-white border border-border rounded-[20px] p-8 shadow-lg">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-xs font-bold text-text-muted uppercase tracking-[3px]">साझा Share</h2>
+            <h2 className="text-xs font-bold text-text-muted uppercase tracking-[3px]">Bhada maa</h2>
             <h1 className="text-2xl font-black">KYC Verification</h1>
             <p className="text-text-muted mt-1">Complete verification to start renting</p>
           </div>

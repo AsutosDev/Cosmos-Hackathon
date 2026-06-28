@@ -117,14 +117,7 @@ export default function ItemsPage() {
               transition={{ delay: i * 0.05 }}
               whileHover={{ y: -8 }}
               className="bg-surface rounded-[32px] p-6 border border-border flex flex-col gap-4 group cursor-pointer hover:border-primary transition-all shadow-sm hover:shadow-xl"
-              onClick={() => {
-                // If this is the DJI Drone, require KYC first
-                if (item.name === 'DJI Drone') {
-                  router.push('/kyc');
-                } else {
-                  router.push(`/items/${item.id}/book`);
-                }
-              }}
+              onClick={() => router.push(`/items/${item.id}/order`)}
             >
               <div className="h-[180px] bg-element-bg rounded-2xl overflow-hidden flex items-center justify-center p-4">
                 <img 

@@ -1,16 +1,18 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { doc, getDoc } from 'firebase/firestore';
 import { db, auth } from '@/lib/firebase';
 import { motion } from 'framer-motion';
 import { onAuthStateChanged } from 'firebase/auth';
+import { rentalItems as sampleItems } from '@/data/sampleItems';
 
 export default function BookItemPage() {
   const params = useParams();
   const id = params?.id as string;
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [item, setItem] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -21,9 +23,20 @@ export default function BookItemPage() {
       setLoading(true);
       try {
         const d = await getDoc(doc(db, 'items', id));
-        if (d.exists()) setItem({ id: d.id, ...d.data() });
+        if (d.exists()) {
+          setItem({ id: d.id, ...d.data() });
+        } else {
+          const sample = sampleItems.find((sampleItem) => sampleItem.id.toString() === id);
+          if (sample) {
+            setItem({ ...sample, id });
+          }
+        }
       } catch (err) {
         console.error(err);
+        const sample = sampleItems.find((sampleItem) => sampleItem.id.toString() === id);
+        if (sample) {
+          setItem({ ...sample, id });
+        }
       } finally {
         setLoading(false);
       }
@@ -51,7 +64,7 @@ export default function BookItemPage() {
     return () => unsub();
   }, [router]);
 
-  if (loading || !item) {
+  if (loading) {
     return (
       <div className="py-20 text-center">
         <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity }} className="w-10 h-10 border-4 border-primary border-t-transparent mx-auto" />
@@ -59,8 +72,21 @@ export default function BookItemPage() {
     );
   }
 
+  if (!item) {
+    return (
+      <div className="py-20 text-center text-red-600">
+        <p className="text-xl font-bold">Item not found.</p>
+        <p className="text-text-muted mt-2">Please go back and choose another item.</p>
+      </div>
+    );
+  }
+
   // Pre-calculated security deposit (collateral): 3x daily price by default
   const deposit = item.securityDeposit ?? (Number(item.price || 0) * 3);
+
+  const pickupDate = searchParams?.get('pickup') || '';
+  const returnDate = searchParams?.get('return') || '';
+  const pickupLocation = searchParams?.get('location') || '';
 
   const handleBook = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -99,13 +125,20 @@ export default function BookItemPage() {
           </div>
 
           <form onSubmit={handleBook} className="mt-6 flex flex-col gap-3">
-            <label className="text-sm font-bold">Pickup Date</label>
-            <input type="date" required className="border border-border p-2 rounded" />
-            <label className="text-sm font-bold">Return Date</label>
-            <input type="date" required className="border border-border p-2 rounded" />
-
+            <div>
+              <p className="text-sm font-bold">Pickup Date</p>
+              <p className="text-text-muted">{pickupDate || 'Not selected'}</p>
+            </div>
+            <div>
+              <p className="text-sm font-bold">Return Date</p>
+              <p className="text-text-muted">{returnDate || 'Not selected'}</p>
+            </div>
+            <div>
+              <p className="text-sm font-bold">Pickup Location</p>
+              <p className="text-text-muted">{pickupLocation || 'Not selected'}</p>
+            </div>
             <button type="submit" disabled={submitting} className="mt-4 bg-primary text-white py-3 rounded-2xl font-bold disabled:opacity-50">
-              {submitting ? 'Requesting…' : 'Request Booking'}
+              {submitting ? 'Requesting…' : 'Confirm Booking'}
             </button>
           </form>
         </aside>
